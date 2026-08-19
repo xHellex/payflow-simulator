@@ -46,5 +46,5 @@ pnpm install
 # 3. Levantar el entorno de desarrollo
 pnpm dev
 
-# Ejecutar la suite de pruebas (Lógica de Negocio e Integración UI)
+# 4. Ejecutar la suite de pruebas (Lógica de Negocio e Integración UI)
 pnpm test
