@@ -1,75 +1,50 @@
-# React + TypeScript + Vite
+# 💳 PayFlow Simulator - Pasarela de Pagos Transaccional
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![React](https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript_Strict-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Zustand](https://img.shields.io/badge/Zustand-4A4A55?style=for-the-badge)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)
 
-Currently, two official plugins are available:
+🟢 **Demo en vivo:** [Haz clic aquí para probar el simulador](https://payflow-simulator-one.vercel.app/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Un simulador de frontend (SPA) que replica la complejidad del flujo de pago de servicios básicos e institucionales (inspirado en sistemas transaccionales reales). 
 
-## React Compiler
+El objetivo de este proyecto es demostrar el manejo avanzado del estado de la UI, la validación estricta de datos en tiempo de ejecución (Runtime), el cumplimiento de normativas de accesibilidad (WCAG) y el renderizado condicional basado en reglas de negocio específicas, todo respaldado por pruebas unitarias y de integración.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚀 Arquitectura y Decisiones Técnicas
 
-## Expanding the ESLint configuration
+Este proyecto evita el acoplamiento y prioriza la separación de responsabilidades (Separation of Concerns).
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+* **Manejo de Estado (Zustand):** Se eligió Zustand por sobre React Context para manejar el carrito de pagos. Evita el *prop-drilling* y los renderizados innecesarios, manteniendo una API limpia y directa.
+* **Control de Latencia (Promise.race & AbortController):** El cliente no confía ciegamente en el servidor. Se implementó un timeout del lado del cliente (`5000ms`) y un botón de cancelación manual que aborta la promesa de pago, evitando que la UI quede bloqueada indefinidamente.
+* **Accesibilidad (a11y - WCAG):** El modal transaccional cuenta con soporte total para navegación por teclado (focus trap, `Esc` para cerrar) y lectores de pantalla (uso de `role="dialog"`, `aria-modal="true"` y regiones `aria-live="polite"` para anunciar los cambios de estado asíncronos).
+* **Validación de Formularios (React Hook Form + Zod):** El formulario de reembolso incluye validaciones estrictas con expresiones regulares (Regex) para el RUT chileno y el número de cuenta, garantizando que el `submit` solo ocurra con datos saneados.
+* **Simulador Determinista de API:** En la capa de servicios (`paymentService.ts`), los errores no son aleatorios. Se programó un interceptor que lanza clases de error personalizadas (`PaymentRejectedError`, `PaymentTimeoutError`) basados en el monto a pagar, permitiendo realizar pruebas TDD predecibles.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🧪 Casos de Uso y Testing Manual
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+El motor de pagos está diseñado para forzar distintos escenarios. Puedes probarlos agregando las siguientes cuentas al carrito:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. **Flujo Exitoso Normal:** Agrega "Aguas Andinas". El pago procesará en 2 segundos y devolverá un comprobante estándar.
+2. **Renderizado Condicional (Regla de Negocio):** Agrega "Fonasa". El motor detectará la categoría institucional e inyectará un código de atención. La vista del recibo reaccionará dibujando un Voucher Médico adicional.
+3. **Manejo de Errores (Rechazo):** Agrega "Enel" (Monto: $24.999). El motor interceptará la terminación `99` y forzará un rechazo por "Fondos Insuficientes". La UI transicionará limpiamente al estado de error ofreciendo reintento.
+4. **Manejo de Latencia (Timeout & AbortController):** Agrega "VTR" (Monto: $32.088). La terminación `88` obligará a la pasarela a colgarse. El usuario puede cancelar la transacción manualmente con el botón, o esperar 5 segundos para que la máquina de estados aborte por timeout.
 
-```
+## 🛠️ Instalación y Ejecución
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Este proyecto utiliza `pnpm` para la gestión de dependencias.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+# 1. Clonar el repositorio
+git clone [https://github.com/xHellex/payflow-simulator.git](https://github.com/xHellex/payflow-simulator.git)
+cd payflow-simulator
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# 2. Instalar dependencias
+pnpm install
 
-```
+# 3. Levantar el entorno de desarrollo
+pnpm dev
+
+# Ejecutar la suite de pruebas (Lógica de Negocio e Integración UI)
+pnpm test
