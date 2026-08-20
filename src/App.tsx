@@ -11,19 +11,20 @@ function App() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto p-8">
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-slate-800">Pago de Cuentas</h2>
-          <p className="text-slate-600 mt-2">Selecciona los servicios que deseas pagar hoy.</p>
-        </div>
+      <main className="max-w-6xl mx-auto p-4 md:p-8">
+        {/* flex-col para móvil, lg:flex-row para desktop */}
+        <div className="flex flex-col lg:flex-row gap-8 items-start">
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
+          {/* Columna Izquierda: Cuentas (Toma más espacio en desktop) */}
+          <div className="w-full lg:w-2/3">
             <AccountList />
           </div>
-          <div className="lg:col-span-1">
+
+          {/* Columna Derecha: Carrito (Fijo en desktop) */}
+          <div className="w-full lg:w-1/3 lg:sticky lg:top-8">
             <Cart />
           </div>
+
         </div>
       </main>
     </div>
