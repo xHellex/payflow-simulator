@@ -8,4 +8,4 @@ Se implementó un patrón `Promise.race` en la capa de servicios (`paymentServic
 
 ## Consecuencias
 * **Positivas:** El usuario nunca queda bloqueado. Mejora la experiencia y la percepción de seguridad.
-* **Negativas/Riesgos:** Un timeout en el cliente no garantiza que el cobro no se haya efectuado en el banco. Se requiere un proceso de conciliación asíncrono en el backend.
+* **Negativas/Riesgos:** Un timeout o cancelación manual en el cliente no detiene la petición en vuelo hacia el banco. En un entorno real, el `AbortController.signal` se inyecta en el cliente HTTP (ej. `fetch`), pero esto solo corta la conexión de red. Si el servidor ya recibió la orden, el cobro puede efectuarse igual. Por ende, la arquitectura exige un proceso de conciliación asíncrono en el backend para reversar pagos "huérfanos".
