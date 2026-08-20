@@ -21,18 +21,18 @@ export const AccountList = () => {
                                 <p className="text-xs text-slate-400 mt-1">Identificador: {account.clientIdentifier}</p>
                             </div>
 
-                            {/* Sección Derecha: Precio y Botón */}
-                            <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t sm:border-t-0 border-slate-100 pt-3 sm:pt-0 mt-2 sm:mt-0">
-                                <span className="text-lg font-bold text-slate-800 mb-0 sm:mb-2">
+                            {/* Sección Derecha: Precio y Botón (CORREGIDA) */}
+                            <div className="flex flex-col sm:items-end gap-3 w-full sm:w-auto border-t sm:border-t-0 border-slate-100 pt-4 sm:pt-0">
+                                <span className="text-lg font-bold text-slate-800">
                                     ${account.amount.toLocaleString('es-CL')}
                                 </span>
 
                                 <button
                                     onClick={() => addToCart(account)}
                                     disabled={isInCart}
-                                    className={`w-full sm:w-auto px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${isInCart
-                                        ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                                        : 'bg-blue-600 text-white hover:bg-blue-700'
+                                    className={`w-full sm:w-auto px-4 py-2 rounded-md text-sm font-medium transition-colors ${isInCart
+                                            ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                                            : 'bg-blue-600 text-white hover:bg-blue-700'
                                         }`}
                                 >
                                     {isInCart ? 'Agregado' : 'Agregar al pago'}
