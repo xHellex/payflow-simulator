@@ -122,12 +122,12 @@ export const PaymentModal = ({ onClose }: PaymentModalProps) => {
                                 Por favor, ingresa una cuenta bancaria para devoluciones automáticas en caso de que la transacción falle con tu banco.
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <Input label="RUT" placeholder="12345678-9" error={errors.rut?.message} {...register('rut')} />
                                 <Input label="Correo Electrónico" placeholder="correo@ejemplo.com" error={errors.email?.message} {...register('email')} />
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-xs font-medium text-slate-700 mb-1">Banco</label>
                                     <select {...register('bank')} className={`w-full border rounded-md p-2 text-sm ${errors.bank ? 'border-red-500' : 'border-slate-300'}`} aria-invalid={!!errors.bank}>
@@ -180,11 +180,11 @@ export const PaymentModal = ({ onClose }: PaymentModalProps) => {
                             </h3>
                             <p className="text-slate-600 text-sm mb-6">{errorMessage}</p>
 
-                            <div className="flex gap-4 justify-center">
-                                <Button onClick={handleClose} variant="secondary" className="w-auto">
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                <Button onClick={handleClose} variant="secondary" className="w-full sm:w-auto">
                                     Cancelar
                                 </Button>
-                                <Button onClick={() => setStatus('IDLE')} variant="primary" className="w-auto">
+                                <Button onClick={() => setStatus('IDLE')} variant="primary" className="w-full sm:w-auto">
                                     Reintentar Pago
                                 </Button>
                             </div>
