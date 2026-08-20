@@ -5,6 +5,7 @@
 ![Zustand](https://img.shields.io/badge/Zustand-4A4A55?style=for-the-badge)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Vitest](https://img.shields.io/badge/Vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)
+[![CI Tests](https://github.com/xHellex/payflow-simulator/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/xHellex/payflow-simulator/actions/workflows/test.yml)
 
 🟢 **Demo en vivo:** [Haz clic aquí para probar el simulador](https://payflow-simulator-one.vercel.app/)
 
@@ -18,7 +19,7 @@ Este proyecto evita el acoplamiento y prioriza la separación de responsabilidad
 
 * **Manejo de Estado (Zustand):** Se eligió Zustand por sobre React Context para manejar el carrito de pagos. Evita el *prop-drilling* y los renderizados innecesarios, manteniendo una API limpia y directa.
 * **Control de Latencia (Promise.race & AbortController):** El cliente no confía ciegamente en el servidor. Se implementó un timeout del lado del cliente (`5000ms`) y un botón de cancelación manual que aborta la promesa de pago, evitando que la UI quede bloqueada indefinidamente.
-* **Accesibilidad (a11y - WCAG):** El modal transaccional cuenta con soporte total para navegación por teclado (focus trap, `Esc` para cerrar) y lectores de pantalla (uso de `role="dialog"`, `aria-modal="true"` y regiones `aria-live="polite"` para anunciar los cambios de estado asíncronos).
+* **Accesibilidad (a11y - WCAG):** El modal transaccional cuenta con soporte para navegación por teclado (gestión de foco inicial, Esc para cerrar) y lectores de pantalla (uso de role="dialog", aria-modal="true", role="alert" en errores y regiones aria-live="polite" para anunciar los cambios de estado asíncronos).
 * **Validación de Formularios (React Hook Form + Zod):** El formulario de reembolso incluye validaciones estrictas con expresiones regulares (Regex) para el RUT chileno y el número de cuenta, garantizando que el `submit` solo ocurra con datos saneados.
 * **Simulador Determinista de API:** En la capa de servicios (`paymentService.ts`), los errores no son aleatorios. Se programó un interceptor que lanza clases de error personalizadas (`PaymentRejectedError`, `PaymentTimeoutError`) basados en el monto a pagar, permitiendo realizar pruebas TDD predecibles.
 
