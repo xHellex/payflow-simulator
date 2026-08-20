@@ -42,12 +42,51 @@ export const PaymentModal = ({ onClose }: PaymentModalProps) => {
 
     const totalAmount = cart.reduce((sum, item) => sum + item.amount, 0);
 
-    // a11y: Trap de foco inicial y tecla ESC
+    // a11y: Trap de foco inicial, ciclo con Tab y cierre con ESC
     useEffect(() => {
-        modalRef.current?.focus();
+        const modalElement = modalRef.current;
+        if (!modalElement) return;
+
+        // 1. Identificar todos los elementos que pueden recibir foco dentro del modal
+        const focusableSelectors = 'button, [href], input, select, textare, [tabindex]:not([tabindex="-1"])';
+        const focusableElements = modalElement.querySelectorAll<HTMLElement>(focusableSelectors);
+
+        if (focusableElements.length === 0) return;
+
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        // Validación extra para satisfacer el modo estricto de TypeScript
+        if (!firstElement || !lastElement) return;
+
+        // 2. Dar el foco inicial al primer elemento interactivo al abrir el modal
+        firstElement.focus();
+
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === 'Escape' && status !== 'PROCESSING') onClose();
+            // 3. Manejar el cierre con la tecla Escape
+            if (e.key === 'Escape' && status !== 'PROCESSING') {
+                onClose();
+                return;
+            }
+
+            // 4. Implementar el Focus Trap si se presiona la tecla Tab
+            if (e.key === 'Tab') {
+                if (e.shiftKey) {
+                    // Si presiona Shift + Tab (navegación hacia atrás)
+                    if (document.activeElement === firstElement) {
+                        e.preventDefault(); // Evita que el navegador saque el foco del modal
+                        lastElement.focus(); // Lo enviamos al final
+                    }
+                } else {
+                    // Si presiona solo Tab (navegación hacia adelante)
+                    if (document.activeElement === lastElement) {
+                        e.preventDefault(); // Evita que el navegador saque el foco del modal
+                        firstElement.focus(); // Lo devolvemos al inicio
+                    }
+                }
+            }
         };
+
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [status, onClose]);
