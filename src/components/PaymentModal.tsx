@@ -48,7 +48,7 @@ export const PaymentModal = ({ onClose }: PaymentModalProps) => {
         if (!modalElement) return;
 
         // 1. Identificar todos los elementos que pueden recibir foco dentro del modal
-        const focusableSelectors = 'button, [href], input, select, textare, [tabindex]:not([tabindex="-1"])';
+        const focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
         const focusableElements = modalElement.querySelectorAll<HTMLElement>(focusableSelectors);
 
         if (focusableElements.length === 0) return;
